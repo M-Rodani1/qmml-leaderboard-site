@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join the QMML Leaderboard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="icon" href="assets/logo.jpg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="head">
+    <div class="brand"><img src="assets/logo.jpg" alt="QMUL Machine Learning Society logo" width="56" height="56"><p class="eyebrow">QMUL Machine Learning Society</p></div>
+    <h1>Join the leaderboard</h1>
+    <p class="lede">There is no sign-up. Put <strong>qmml-</strong> at the start of your Kaggle team name and you appear on the leaderboard within the hour.</p>
+    <p class="meta"><a href="index.html">Back to leaderboard</a></p>
+  </header>
+  <form class="form" id="form" autocomplete="off">
+    <label for="name">Your name</label>
+    <input id="name" required placeholder="Aisha Rahman">
+    <small>We show your name from the team name, so qmml-aisha-rahman appears as Aisha Rahman.</small>
+    <label for="consent" class="check"><input type="checkbox" id="consent" required> I agree to my name and scores being shown publicly.</label>
+    <button type="submit" class="btn">Get my team name</button>
+  </form>
+  <section id="result" hidden>
+    <p class="meta">Use this as your team name when you join or enter a competition:</p>
+    <pre id="snippet" class="snippet"></pre>
+    <button class="btn" id="copy" type="button">Copy team name</button>
+    <p class="meta">On Kaggle, open the competition, go to Team, and rename your team. Solo entries can use it as well.</p>
+  </section>
+</main>
+<script>
+document.getElementById("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const slug = document.getElementById("name").value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  if (!slug) return;
+  document.getElementById("snippet").textContent = "qmml-" + slug;
+  document.getElementById("result").hidden = false;
+});
+document.getElementById("copy").addEventListener("click", async (e) => {
+  const btn = e.currentTarget, text = document.getElementById("snippet").textContent;
+  try { await navigator.clipboard.writeText(text); btn.textContent = "Copied"; }
+  catch (_) { const r = document.createRange(); r.selectNodeContents(document.getElementById("snippet")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Press Ctrl/Cmd+C"; }
+});
+</script>
+</body>
+</html>

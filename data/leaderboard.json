@@ -1,0 +1,23 @@
+{
+  "sample": false,
+  "updated_at": "2026-10-07T11:29:27Z",
+  "competitions": [
+    {
+      "slug": "playground-series-s6e10",
+      "title": "Predicting Airline Satisfaction",
+      "metric": "ROC AUC",
+      "higher_is_better": true,
+      "deadline": "2026-10-31",
+      "total_teams": 1039,
+      "entries": [
+        {
+          "member": "MoRo",
+          "team": "qmml-MoRo",
+          "kaggle_rank": 582,
+          "score": 0.95853,
+          "last_submission": "2026-10-02"
+        }
+      ]
+    }
+  ]
+}
