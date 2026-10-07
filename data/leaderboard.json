@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-07T18:58:30Z",
+  "updated_at": "2026-10-07T23:36:23Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,12 +8,12 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31",
-      "total_teams": 1082,
+      "total_teams": 1088,
       "entries": [
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 603,
+          "kaggle_rank": 608,
           "score": 0.95853,
           "last_submission": "2026-10-02"
         }
