@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-09T07:27:14Z",
+  "updated_at": "2026-10-09T15:20:13Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,28 +8,35 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31",
-      "total_teams": 1247,
+      "total_teams": 1304,
       "entries": [
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 695,
+          "kaggle_rank": 718,
           "score": 0.95853,
           "last_submission": "2026-10-02"
         },
         {
+          "member": "Seelie",
+          "team": "QMML-Seelie",
+          "kaggle_rank": 751,
+          "score": 0.95847,
+          "last_submission": "2026-10-09"
+        },
+        {
           "member": "YAK",
           "team": "QMML-YAK",
-          "kaggle_rank": 1048,
+          "kaggle_rank": 1096,
           "score": 0.95762,
           "last_submission": "2026-10-08"
         },
         {
           "member": "Loss Cause",
           "team": "QMML-Loss-Cause",
-          "kaggle_rank": 1050,
+          "kaggle_rank": 1098,
           "score": 0.95762,
-          "last_submission": "2026-10-08"
+          "last_submission": "2026-10-09"
         }
       ]
     }
