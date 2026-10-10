@@ -128,9 +128,17 @@ def main():
         order = {c["slug"]: i for i, c in enumerate(comps)}
         results.sort(key=lambda c: order.get(c["slug"], 99))
 
+    now = datetime.now(timezone.utc)
+    if args.out.exists() and not args.from_csv:
+        prev = json.loads(args.out.read_text())
+        age = now - datetime.fromisoformat(prev["updated_at"].replace("Z", "+00:00"))
+        if prev.get("competitions") == results and not prev.get("sample") and age.total_seconds() < 50 * 60:
+            print("no change, leaving leaderboard.json as is")
+            return
+
     args.out.write_text(json.dumps({
         "sample": bool(args.from_csv),
-        "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "updated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "competitions": results,
     }, indent=2) + "\n")
     print(f"wrote {args.out}")

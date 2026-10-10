@@ -3,7 +3,7 @@
 Static site showing how QMUL ML Society members rank on Kaggle competitions.
 
 ## How it works
-`scripts/sync.py` downloads each public leaderboard listed in `competitions.json`, keeps every team whose name starts with `qmml-` (so `qmml-aisha-rahman` shows as Aisha Rahman), and writes `data/leaderboard.json`. `index.html` renders that file. A GitHub Action runs the sync hourly and commits the result.
+`scripts/sync.py` downloads each public leaderboard listed in `competitions.json`, keeps every team whose name starts with `qmml-` (so `qmml-aisha-rahman` shows as Aisha Rahman), and writes `data/leaderboard.json`. `index.html` renders that file. A GitHub Action tries to run the sync every 15 minutes. It commits when the data changes, or at least hourly to refresh the timestamp. GitHub often delays scheduled runs, so real gaps of a few hours happen; run the workflow by hand for an instant refresh.
 
 ## Setup
 1. Create a Kaggle API token (Kaggle > Settings > API) and add it as the repo secret `KAGGLE_API_TOKEN` (locally: `export KAGGLE_API_TOKEN=...`).

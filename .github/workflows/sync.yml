@@ -1,7 +1,7 @@
 name: Sync Kaggle leaderboard
 on:
   schedule:
-    - cron: "17 * * * *"   # hourly
+    - cron: "*/15 * * * *"   # GitHub may delay or skip scheduled runs, so ask often
   workflow_dispatch:
   push:
     paths: [members.json, competitions.json]
