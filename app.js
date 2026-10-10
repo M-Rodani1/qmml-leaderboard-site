@@ -96,7 +96,7 @@ function show(data, key) {
 async function init() {
   let data;
   try {
-    data = await (window.__DATA__ ? Promise.resolve(window.__DATA__) : fetch(DATA_URL).then((r) => r.json()));
+    data = await (window.__DATA__ ? Promise.resolve(window.__DATA__) : fetch(DATA_URL, { cache: "no-cache" }).then((r) => r.json()));
   } catch (_) {
     document.getElementById("panel").innerHTML = '<p class="empty">Could not load the leaderboard. Try again shortly.</p>';
     return;

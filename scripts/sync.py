@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
-PREFIX = "qmml-"  # any team whose name starts with this belongs to the society
+PREFIX_RE = re.compile(r"^qmml\s*-\s*(?=\S)", re.I)  # "qmml-x" or "QMML - x" belongs to the society
 
 
 def norm(s):
@@ -38,7 +38,7 @@ def fetch_live(api, slug, tmp):
 
 def display_name(team_name):
     """'qmml-aisha-rahman' -> 'Aisha Rahman'; mixed case like 'qmml-MoRo' is kept as written."""
-    rest = team_name.strip()[len(PREFIX):]
+    rest = PREFIX_RE.sub("", team_name.strip())
     rest = re.sub(r"[-_\s]+", " ", rest).strip()
     return rest.title() if rest == rest.lower() else rest
 
@@ -71,7 +71,7 @@ def build_competition(comp, rows, roster):
     for rank, score, r in ranked:
         team = norm(r.get("TeamName", ""))
         member = by_id.get(str(r.get("TeamId", ""))) or by_name.get(team)
-        if not member and team.startswith(PREFIX) and len(team) > len(PREFIX):
+        if not member and PREFIX_RE.match(r.get("TeamName", "").strip()):
             member = display_name(r.get("TeamName", ""))
         if not member:
             continue
