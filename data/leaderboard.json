@@ -1,51 +1,121 @@
 {
   "sample": false,
-  "updated_at": "2026-10-10T21:34:11Z",
+  "updated_at": "2026-10-10T21:53:31Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
       "title": "Predicting Airline Satisfaction",
       "metric": "ROC AUC",
       "higher_is_better": true,
-      "deadline": "2026-10-31",
+      "deadline": "2026-10-31T23:59:00Z",
       "total_teams": 1448,
       "entries": [
         {
           "member": "Seelie",
           "team": "QMML-Seelie",
-          "kaggle_rank": 635,
+          "kaggle_rank": 638,
           "score": 0.96009,
-          "last_submission": "2026-10-09"
+          "last_submission": "2026-10-09",
+          "rank_change": -46,
+          "history": [
+            [
+              "2026-10-09",
+              0.96009
+            ],
+            [
+              "2026-10-10",
+              0.96009
+            ]
+          ]
         },
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 692,
+          "kaggle_rank": 694,
           "score": 0.95946,
-          "last_submission": "2026-10-10"
+          "last_submission": "2026-10-10",
+          "rank_change": 42,
+          "history": [
+            [
+              "2026-10-07",
+              0.95853
+            ],
+            [
+              "2026-10-08",
+              0.95853
+            ],
+            [
+              "2026-10-09",
+              0.95853
+            ],
+            [
+              "2026-10-10",
+              0.95946
+            ]
+          ]
         },
         {
           "member": "Manu",
           "team": "QMML - Manu",
-          "kaggle_rank": 739,
+          "kaggle_rank": 740,
           "score": 0.95877,
-          "last_submission": "2026-10-10"
+          "last_submission": "2026-10-10",
+          "new": true,
+          "history": [
+            [
+              "2026-10-10",
+              0.95877
+            ]
+          ]
         },
         {
           "member": "YAK",
           "team": "QMML-YAK",
           "kaggle_rank": 1224,
           "score": 0.95762,
-          "last_submission": "2026-10-08"
+          "last_submission": "2026-10-08",
+          "rank_change": -106,
+          "history": [
+            [
+              "2026-10-08",
+              0.95762
+            ],
+            [
+              "2026-10-09",
+              0.95762
+            ],
+            [
+              "2026-10-10",
+              0.95762
+            ]
+          ]
         },
         {
           "member": "Loss Cause",
           "team": "QMML-Loss-Cause",
           "kaggle_rank": 1226,
           "score": 0.95762,
-          "last_submission": "2026-10-09"
+          "last_submission": "2026-10-09",
+          "rank_change": -106,
+          "history": [
+            [
+              "2026-10-08",
+              0.95762
+            ],
+            [
+              "2026-10-09",
+              0.95762
+            ],
+            [
+              "2026-10-10",
+              0.95762
+            ]
+          ]
         }
-      ]
+      ],
+      "status": "open",
+      "leaderboard": "public",
+      "movement_since": "2026-10-09"
     }
   ]
 }

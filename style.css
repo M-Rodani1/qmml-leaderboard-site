@@ -11,6 +11,8 @@
   --silver: #b9c0d0;
   --bronze: #d49a6a;
   --on-medal: #0f1a2b;
+  --up: #17794a;
+  --down: #b8392e;
   --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --font-data: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -18,13 +20,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #050b1f; --surface: #0d1630; --ink: #e8f1fa; --muted: #93a8c0; --line: #1c2a4d;
-    --accent: #6ccff0; --accent-soft: #123049; --silver: #8d95ad; --bronze: #c0875a;
+    --accent: #6ccff0; --accent-soft: #123049; --up: #5fd39a; --down: #ff8f85; --silver: #8d95ad; --bronze: #c0875a;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #050b1f; --surface: #0d1630; --ink: #e8f1fa; --muted: #93a8c0; --line: #1c2a4d;
-  --accent: #6ccff0; --accent-soft: #123049; --silver: #8d95ad; --bronze: #c0875a;
+  --accent: #6ccff0; --accent-soft: #123049; --up: #5fd39a; --down: #ff8f85; --silver: #8d95ad; --bronze: #c0875a;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -64,6 +66,23 @@ h1 { margin: 0; font: 800 clamp(2rem, 6vw, 3.2rem)/1 var(--font-display); text-w
 .pl.p1 { --h: 5.5rem; --c: var(--gold); }
 .pl.p2 { --h: 3.5rem; --c: var(--silver); }
 .pl.p3 { --h: 2.5rem; --c: var(--bronze); }
+
+/* movement, gap, trend, status */
+.move { display: inline-block; margin-left: 0.45rem; font: 500 0.72rem var(--font-data); font-variant-numeric: tabular-nums; white-space: nowrap; vertical-align: middle; }
+.move.up { color: var(--up); }
+.move.down { color: var(--down); }
+.move.same { color: var(--muted); }
+.move.new { padding: 0 0.35rem; border: 1px solid var(--accent); color: var(--accent); }
+.pl .gap { margin-top: 0.15rem; }
+.gap-cell { color: var(--muted); font-size: 0.85rem; }
+.muted { color: var(--muted); }
+.spark { display: block; overflow: visible; }
+.spark polyline { stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.spark circle { fill: var(--accent); stroke: var(--surface); stroke-width: 1.5; }
+.chip { display: inline-block; padding: 0.05rem 0.45rem; border: 1px solid var(--line); color: var(--ink);
+  font: 500 0.7rem var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; }
+.chip.final { border-color: var(--gold); }
+.chip.closed { border-color: var(--bronze); }
 
 /* table */
 .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); }

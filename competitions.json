@@ -1,3 +1,9 @@
 [
-  {"slug": "playground-series-s6e10", "title": "Predicting Airline Satisfaction", "metric": "ROC AUC", "higher_is_better": true, "deadline": "2026-10-31"}
+  {
+    "slug": "playground-series-s6e10",
+    "title": "Predicting Airline Satisfaction",
+    "metric": "ROC AUC",
+    "higher_is_better": true,
+    "deadline": "2026-10-31T23:59:00Z"
+  }
 ]
