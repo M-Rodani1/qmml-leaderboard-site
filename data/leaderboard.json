@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-10T21:53:31Z",
+  "updated_at": "2026-10-11T00:30:17Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,15 +8,15 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31T23:59:00Z",
-      "total_teams": 1448,
+      "total_teams": 1449,
       "entries": [
         {
           "member": "Seelie",
           "team": "QMML-Seelie",
-          "kaggle_rank": 638,
+          "kaggle_rank": 639,
           "score": 0.96009,
           "last_submission": "2026-10-09",
-          "rank_change": -46,
+          "rank_change": -1,
           "history": [
             [
               "2026-10-09",
@@ -25,16 +25,20 @@
             [
               "2026-10-10",
               0.96009
+            ],
+            [
+              "2026-10-11",
+              0.96009
             ]
           ]
         },
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 694,
+          "kaggle_rank": 695,
           "score": 0.95946,
           "last_submission": "2026-10-10",
-          "rank_change": 42,
+          "rank_change": -1,
           "history": [
             [
               "2026-10-07",
@@ -51,19 +55,27 @@
             [
               "2026-10-10",
               0.95946
+            ],
+            [
+              "2026-10-11",
+              0.95946
             ]
           ]
         },
         {
           "member": "Manu",
           "team": "QMML - Manu",
-          "kaggle_rank": 740,
+          "kaggle_rank": 741,
           "score": 0.95877,
           "last_submission": "2026-10-10",
-          "new": true,
+          "rank_change": -1,
           "history": [
             [
               "2026-10-10",
+              0.95877
+            ],
+            [
+              "2026-10-11",
               0.95877
             ]
           ]
@@ -74,7 +86,7 @@
           "kaggle_rank": 1224,
           "score": 0.95762,
           "last_submission": "2026-10-08",
-          "rank_change": -106,
+          "rank_change": 0,
           "history": [
             [
               "2026-10-08",
@@ -86,6 +98,10 @@
             ],
             [
               "2026-10-10",
+              0.95762
+            ],
+            [
+              "2026-10-11",
               0.95762
             ]
           ]
@@ -96,7 +112,7 @@
           "kaggle_rank": 1226,
           "score": 0.95762,
           "last_submission": "2026-10-09",
-          "rank_change": -106,
+          "rank_change": 0,
           "history": [
             [
               "2026-10-08",
@@ -109,13 +125,17 @@
             [
               "2026-10-10",
               0.95762
+            ],
+            [
+              "2026-10-11",
+              0.95762
             ]
           ]
         }
       ],
       "status": "open",
       "leaderboard": "public",
-      "movement_since": "2026-10-09"
+      "movement_since": "2026-10-10"
     }
   ]
 }
