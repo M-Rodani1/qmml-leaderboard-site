@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-11T00:30:17Z",
+  "updated_at": "2026-10-11T06:29:01Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,15 +8,15 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31T23:59:00Z",
-      "total_teams": 1449,
+      "total_teams": 1470,
       "entries": [
         {
           "member": "Seelie",
           "team": "QMML-Seelie",
-          "kaggle_rank": 639,
+          "kaggle_rank": 650,
           "score": 0.96009,
           "last_submission": "2026-10-09",
-          "rank_change": -1,
+          "rank_change": -12,
           "history": [
             [
               "2026-10-09",
@@ -35,10 +35,10 @@
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 695,
+          "kaggle_rank": 706,
           "score": 0.95946,
           "last_submission": "2026-10-10",
-          "rank_change": -1,
+          "rank_change": -12,
           "history": [
             [
               "2026-10-07",
@@ -65,10 +65,10 @@
         {
           "member": "Manu",
           "team": "QMML - Manu",
-          "kaggle_rank": 741,
+          "kaggle_rank": 755,
           "score": 0.95877,
           "last_submission": "2026-10-10",
-          "rank_change": -1,
+          "rank_change": -15,
           "history": [
             [
               "2026-10-10",
@@ -83,10 +83,10 @@
         {
           "member": "YAK",
           "team": "QMML-YAK",
-          "kaggle_rank": 1224,
+          "kaggle_rank": 1239,
           "score": 0.95762,
           "last_submission": "2026-10-08",
-          "rank_change": 0,
+          "rank_change": -15,
           "history": [
             [
               "2026-10-08",
@@ -109,10 +109,10 @@
         {
           "member": "Loss Cause",
           "team": "QMML-Loss-Cause",
-          "kaggle_rank": 1226,
+          "kaggle_rank": 1241,
           "score": 0.95762,
           "last_submission": "2026-10-09",
-          "rank_change": 0,
+          "rank_change": -15,
           "history": [
             [
               "2026-10-08",
