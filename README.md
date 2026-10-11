@@ -2,7 +2,6 @@
 
 Static site showing how QMUL ML Society members rank on Kaggle competitions.
 
-Members join by naming their Kaggle team `qmml-yourname` (`QMML - Your Name` works too). `qmml-aisha-rahman` shows as Aisha Rahman; mixed case like `qmml-MoRo` is kept as written. Anyone can use the prefix, so check the board occasionally.
 
 ## How it works
 `scripts/sync.py` runs from a GitHub Action, trying every 15 minutes (GitHub often delays scheduled runs, so gaps of an hour or two happen). Each run:
