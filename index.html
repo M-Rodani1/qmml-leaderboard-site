@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>QMML Kaggle Leaderboard</title>
+<script>try { var t = localStorage.getItem("qmml-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="icon" href="assets/logo.jpg">
 <link rel="stylesheet" href="style.css">
@@ -11,16 +12,26 @@
 <body>
 <main class="wrap">
   <header class="head">
-    <div class="brand"><img src="assets/logo.jpg" alt="QMUL Machine Learning Society logo" width="56" height="56"><p class="eyebrow">QMUL Machine Learning Society</p></div>
+    <div class="brand">
+      <img src="assets/logo.jpg" alt="QMUL Machine Learning Society logo" width="56" height="56">
+      <p class="eyebrow">QMUL Machine Learning Society</p>
+      <button class="theme-btn" id="theme" type="button" aria-label="Colour theme">Theme: System</button>
+    </div>
     <h1>Kaggle Leaderboard</h1>
     <p class="lede">Society members ranked within each competition, pulled from the public Kaggle leaderboards.</p>
     <p class="meta"><span id="meta"></span> · <a href="register.html">Add yourself</a></p>
   </header>
   <div class="notice" id="notice" hidden>Example data. Names and scores are placeholders until the Kaggle sync is connected.</div>
-  <nav class="tabs" id="tabs" aria-label="Competitions"></nav>
-  <section id="panel" aria-live="polite"></section>
+  <div class="nav-row">
+    <div class="tabs" id="tabs" role="tablist" aria-label="Leaderboards"></div>
+    <label class="past" id="past-wrap" hidden><span class="visually-hidden">Past competitions</span><select id="past"></select></label>
+  </div>
+  <section id="panel" role="tabpanel" aria-live="polite"></section>
   <footer class="foot">Season points: in each competition, the best society member earns as many points as there are society members in it, the next one fewer, down to 1. Members with the same score share a place and its points. Points add up across competitions. Arrows show Kaggle rank movement since the previous day.</footer>
 </main>
+<dialog class="drawer" id="member" aria-labelledby="member-name">
+  <div id="member-body"></div>
+</dialog>
 <script src="app.js"></script>
 </body>
 </html>

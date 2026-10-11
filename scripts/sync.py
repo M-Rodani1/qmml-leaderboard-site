@@ -220,7 +220,7 @@ def build_competition(comp, rows, roster):
 
 def add_history(entries, history, today):
     """Record today's snapshot, then attach to each entry its Kaggle rank movement
-    since the latest earlier day and its daily score trend."""
+    since the latest earlier day and its daily [day, score, rank] history."""
     history = dict(history)
     history[today] = {e["member"]: [e["kaggle_rank"], e["score"]] for e in entries}
     days = sorted(history)[-HISTORY_DAYS:]
@@ -233,7 +233,8 @@ def add_history(entries, history, today):
                 e["rank_change"] = base[e["member"]][0] - e["kaggle_rank"]  # positive = moved up
             else:
                 e["new"] = True
-        e["history"] = [[d, history[d][e["member"]][1]] for d in days if e["member"] in history[d]]
+        # [day, score, kaggle_rank]
+        e["history"] = [[d, history[d][e["member"]][1], history[d][e["member"]][0]] for d in days if e["member"] in history[d]]
     return history, (earlier[-1] if earlier else None)
 
 

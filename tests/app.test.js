@@ -59,3 +59,55 @@ test("sparkline needs two days and puts better scores higher", () => {
   const lastY = (svg) => Number(svg.match(/cy="([\d.]+)"/)[1]);
   assert.ok(lastY(up) < lastY(down), "a rising AUC ends high; a rising RMSE ends low");
 });
+
+test("season standings keep each competition's points and place", () => {
+  const data = { competitions: [
+    { slug: "oct", total_teams: 10, entries: [e("A", 1, 0.9), e("B", 2, 0.8)] },
+    { slug: "nov", total_teams: 10, entries: [e("B", 1, 0.9)] },
+  ] };
+  const b = app.standings(data).find((p) => p.item.member === "B").item.byComp;
+  assert.deepStrictEqual(b, { oct: { points: 1, place: 2 }, nov: { points: 1, place: 1 } });
+});
+
+test("this month is the running competition closing soonest, else the latest", () => {
+  const now = Date.parse("2026-11-05T00:00:00Z");
+  const oct = { slug: "oct", deadline: "2026-10-31T23:59:00Z", status: "final" };
+  const nov = { slug: "nov", deadline: "2026-11-30T23:59:00Z", status: "open" };
+  const forever = { slug: "forever", deadline: "2030-01-01T00:00:00Z", status: "open" };
+  assert.strictEqual(app.pickCurrent([oct, nov, forever], now).slug, "nov");
+  assert.strictEqual(app.pickCurrent([oct], now).slug, "oct");
+  assert.strictEqual(app.pickCurrent([], now), null);
+});
+
+test("relative update time", () => {
+  assert.strictEqual(app.fmtAgo(20e3), "just now");
+  assert.strictEqual(app.fmtAgo(12 * 60e3), "12 min ago");
+  assert.strictEqual(app.fmtAgo(3 * 3600e3 + 60e3), "3 hours ago");
+  assert.strictEqual(app.fmtAgo(26 * 3600e3), "1 day ago");
+});
+
+test("member links and team names", () => {
+  assert.strictEqual(app.memberSlug("Loss Cause"), "m-loss-cause");
+  assert.strictEqual(app.memberSlug("MoRo"), "m-moro");
+  assert.strictEqual(app.teamName("  Aisha Rahman "), "qmml-aisha-rahman");
+  assert.strictEqual(app.teamName(""), "qmml-your-name");
+});
+
+test("rank axis ticks are whole, positive and cover the data", () => {
+  const { lo, hi, ticks } = app.niceTicks(638, 1226);
+  assert.ok(lo <= 638 && hi >= 1226);
+  assert.ok(ticks.every((t) => Number.isInteger(t) && t > 0));
+  assert.ok(app.niceTicks(1, 1).ticks.every((t) => t > 0));
+});
+
+test("race chart needs two days and highlights you, else the leader", () => {
+  const h = (r1, r2) => [["2026-10-09", 0.9, r1], ["2026-10-10", 0.9, r2]];
+  const c = { slug: "oct", entries: [
+    { ...e("Seelie", 600, 0.96), history: h(590, 600) },
+    { ...e("MoRo", 700, 0.95), history: h(740, 700) },
+  ] };
+  assert.match(app.raceChart(c, null), /Society leader \(Seelie\)/);
+  assert.match(app.raceChart(c, "MoRo"), /You \(MoRo\)/);
+  const oneDay = { slug: "oct", entries: [{ ...e("A", 1, 0.9), history: [["2026-10-10", 0.9, 1]] }] };
+  assert.strictEqual(app.raceChart(oneDay, null), "");
+});

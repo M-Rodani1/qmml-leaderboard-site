@@ -101,7 +101,7 @@ class History(unittest.TestCase):
         self.assertEqual(since, "2026-10-09")
         self.assertEqual(entries[0]["rank_change"], 8)
         self.assertTrue(entries[1]["new"])
-        self.assertEqual(entries[0]["history"], [["2026-10-09", 0.959], ["2026-10-10", 0.95946]])
+        self.assertEqual(entries[0]["history"], [["2026-10-09", 0.959, 700], ["2026-10-10", 0.95946, 692]])
         # a second run on the same day still compares with the previous day, not itself
         again = [entry("MoRo", 690, 0.95950)]
         _, since = sync.add_history(again, hist, "2026-10-10")
