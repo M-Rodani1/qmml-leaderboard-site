@@ -119,7 +119,7 @@ function moveBadge(e, since) {
 // Small daily trend; better values always sit higher, whichever way the measure runs.
 function sparkline(points, higherIsBetter, fmt = fmtScore, noun = "Score") {
   if (!points || points.length < 2) return `<span class="muted">–</span>`;
-  const W = 84, H = 24, P = 4;
+  const W = 96, H = 28, P = 4;
   const ys = points.map((p) => p[1]);
   const lo = Math.min(...ys), hi = Math.max(...ys);
   const x = (i) => P + (i * (W - 2 * P)) / (points.length - 1);
@@ -269,8 +269,8 @@ function raceChart(c, me, width = 640) {
   if (days.length < 2) return "";
   const focus = series.some((s) => s.name === me) ? me : byRank(c.entries)[0].member;
   const narrow = width < 480;
-  const W = Math.max(300, Math.round(width)), H = narrow ? 220 : 250;
-  const M = { l: 52, r: narrow ? 16 : 120, t: narrow ? 26 : 14, b: 28 };
+  const W = Math.max(300, Math.round(width)), H = narrow ? 240 : 300;
+  const M = { l: 62, r: narrow ? 16 : 150, t: narrow ? 30 : 16, b: 32 };
   const ranks = series.flatMap((s) => s.pts.map((p) => p.r));
   const { lo, hi, ticks } = niceTicks(Math.min(...ranks), Math.max(...ranks));
   const x = (i) => M.l + (i * (W - M.l - M.r)) / (days.length - 1);
@@ -280,14 +280,14 @@ function raceChart(c, me, width = 640) {
   const grid = ticks.map((t) => `<line class="grid" x1="${M.l}" x2="${W - M.r}" y1="${y(t).toFixed(1)}" y2="${y(t).toFixed(1)}"></line>` +
     `<text class="tick" x="${M.l - 8}" y="${y(t).toFixed(1)}" dy="0.32em" text-anchor="end">#${fmtInt(t)}</text>`).join("");
   const xIdx = days.length > 4 ? [0, Math.floor((days.length - 1) / 2), days.length - 1] : [0, days.length - 1];
-  const xLabels = xIdx.map((i) => `<text class="tick" x="${x(i).toFixed(1)}" y="${H - 8}" text-anchor="${i === 0 ? "start" : i === days.length - 1 ? "end" : "middle"}">${fmtShort(days[i])}</text>`).join("");
+  const xLabels = xIdx.map((i) => `<text class="tick" x="${x(i).toFixed(1)}" y="${H - 10}" text-anchor="${i === 0 ? "start" : i === days.length - 1 ? "end" : "middle"}">${fmtShort(days[i])}</text>`).join("");
   const others = series.filter((s) => s.name !== focus).map((s) => `<path class="line other" d="${path(s)}"></path>`).join("");
   const f = series.find((s) => s.name === focus);
   const end = f.pts[f.pts.length - 1];
   const ex = x(dayIndex.get(end.d)), ey = y(end.r);
   const label = `${esc(focus)} #${fmtInt(end.r)}`;
   const endLabel = narrow
-    ? `<text class="end-label" x="${ex.toFixed(1)}" y="${(ey - 12).toFixed(1)}" text-anchor="end">${label}</text>`
+    ? `<text class="end-label" x="${ex.toFixed(1)}" y="${(ey - 14).toFixed(1)}" text-anchor="end">${label}</text>`
     : `<text class="end-label" x="${(ex + 10).toFixed(1)}" y="${ey.toFixed(1)}" dy="0.32em">${label}</text>`;
   const id = "race-" + slugify(c.slug);
   raceModels.set(id, { days, series, x, W, M, focus });
