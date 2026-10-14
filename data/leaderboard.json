@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-14T09:19:35Z",
+  "updated_at": "2026-10-14T14:36:57Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,15 +8,15 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31T23:59:00Z",
-      "total_teams": 1806,
+      "total_teams": 1833,
       "entries": [
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 164,
+          "kaggle_rank": 168,
           "score": 0.96184,
           "last_submission": "2026-10-13",
-          "rank_change": -20,
+          "rank_change": -24,
           "history": [
             [
               "2026-10-07",
@@ -56,17 +56,17 @@
             [
               "2026-10-14",
               0.96184,
-              164
+              168
             ]
           ]
         },
         {
           "member": "Seelie",
           "team": "QMML-Seelie",
-          "kaggle_rank": 825,
+          "kaggle_rank": 835,
           "score": 0.96009,
           "last_submission": "2026-10-09",
-          "rank_change": -26,
+          "rank_change": -36,
           "history": [
             [
               "2026-10-09",
@@ -96,17 +96,17 @@
             [
               "2026-10-14",
               0.96009,
-              825
+              835
             ]
           ]
         },
         {
           "member": "Manu",
           "team": "QMML - Manu",
-          "kaggle_rank": 947,
+          "kaggle_rank": 962,
           "score": 0.95877,
           "last_submission": "2026-10-11",
-          "rank_change": -29,
+          "rank_change": -44,
           "history": [
             [
               "2026-10-10",
@@ -131,17 +131,62 @@
             [
               "2026-10-14",
               0.95877,
-              947
+              962
+            ]
+          ]
+        },
+        {
+          "member": "Loss Cause",
+          "team": "QMML-Loss-Cause",
+          "kaggle_rank": 1481,
+          "score": 0.95789,
+          "last_submission": "2026-10-14",
+          "rank_change": 14,
+          "history": [
+            [
+              "2026-10-08",
+              0.95762,
+              1006
+            ],
+            [
+              "2026-10-09",
+              0.95762,
+              1120
+            ],
+            [
+              "2026-10-10",
+              0.95762,
+              1226
+            ],
+            [
+              "2026-10-11",
+              0.95762,
+              1306
+            ],
+            [
+              "2026-10-12",
+              0.95762,
+              1408
+            ],
+            [
+              "2026-10-13",
+              0.95762,
+              1495
+            ],
+            [
+              "2026-10-14",
+              0.95789,
+              1481
             ]
           ]
         },
         {
           "member": "YAK",
           "team": "QMML-YAK",
-          "kaggle_rank": 1527,
+          "kaggle_rank": 1551,
           "score": 0.95762,
           "last_submission": "2026-10-08",
-          "rank_change": -34,
+          "rank_change": -58,
           "history": [
             [
               "2026-10-08",
@@ -176,52 +221,7 @@
             [
               "2026-10-14",
               0.95762,
-              1527
-            ]
-          ]
-        },
-        {
-          "member": "Loss Cause",
-          "team": "QMML-Loss-Cause",
-          "kaggle_rank": 1529,
-          "score": 0.95762,
-          "last_submission": "2026-10-14",
-          "rank_change": -34,
-          "history": [
-            [
-              "2026-10-08",
-              0.95762,
-              1006
-            ],
-            [
-              "2026-10-09",
-              0.95762,
-              1120
-            ],
-            [
-              "2026-10-10",
-              0.95762,
-              1226
-            ],
-            [
-              "2026-10-11",
-              0.95762,
-              1306
-            ],
-            [
-              "2026-10-12",
-              0.95762,
-              1408
-            ],
-            [
-              "2026-10-13",
-              0.95762,
-              1495
-            ],
-            [
-              "2026-10-14",
-              0.95762,
-              1529
+              1551
             ]
           ]
         }
