@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-15T19:07:50Z",
+  "updated_at": "2026-10-15T22:18:30Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,15 +8,15 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31T23:59:00Z",
-      "total_teams": 1960,
+      "total_teams": 1971,
       "entries": [
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 211,
+          "kaggle_rank": 213,
           "score": 0.96184,
           "last_submission": "2026-10-13",
-          "rank_change": -26,
+          "rank_change": -28,
           "history": [
             [
               "2026-10-07",
@@ -61,17 +61,17 @@
             [
               "2026-10-15",
               0.96184,
-              211
+              213
             ]
           ]
         },
         {
           "member": "Seelie",
           "team": "QMML-Seelie",
-          "kaggle_rank": 896,
+          "kaggle_rank": 901,
           "score": 0.96009,
           "last_submission": "2026-10-09",
-          "rank_change": -45,
+          "rank_change": -50,
           "history": [
             [
               "2026-10-09",
@@ -106,17 +106,17 @@
             [
               "2026-10-15",
               0.96009,
-              896
+              901
             ]
           ]
         },
         {
           "member": "Manu",
           "team": "QMML - Manu",
-          "kaggle_rank": 1037,
+          "kaggle_rank": 1042,
           "score": 0.95877,
           "last_submission": "2026-10-11",
-          "rank_change": -57,
+          "rank_change": -62,
           "history": [
             [
               "2026-10-10",
@@ -146,17 +146,17 @@
             [
               "2026-10-15",
               0.95877,
-              1037
+              1042
             ]
           ]
         },
         {
           "member": "Loss Cause",
           "team": "QMML-Loss-Cause",
-          "kaggle_rank": 1550,
+          "kaggle_rank": 1558,
           "score": 0.95798,
           "last_submission": "2026-10-15",
-          "rank_change": -48,
+          "rank_change": -56,
           "history": [
             [
               "2026-10-08",
@@ -196,14 +196,14 @@
             [
               "2026-10-15",
               0.95798,
-              1550
+              1558
             ]
           ]
         },
         {
           "member": "TTJ",
           "team": "QMML-TTJ",
-          "kaggle_rank": 1649,
+          "kaggle_rank": 1658,
           "score": 0.95764,
           "last_submission": "2026-10-15",
           "new": true,
@@ -211,17 +211,17 @@
             [
               "2026-10-15",
               0.95764,
-              1649
+              1658
             ]
           ]
         },
         {
           "member": "YAK",
           "team": "QMML-YAK",
-          "kaggle_rank": 1655,
+          "kaggle_rank": 1664,
           "score": 0.95762,
           "last_submission": "2026-10-08",
-          "rank_change": -81,
+          "rank_change": -90,
           "history": [
             [
               "2026-10-08",
@@ -261,14 +261,14 @@
             [
               "2026-10-15",
               0.95762,
-              1655
+              1664
             ]
           ]
         },
         {
           "member": "MOY",
           "team": "QMML- MOY",
-          "kaggle_rank": 1657,
+          "kaggle_rank": 1666,
           "score": 0.95762,
           "last_submission": "2026-10-15",
           "new": true,
@@ -276,14 +276,14 @@
             [
               "2026-10-15",
               0.95762,
-              1657
+              1666
             ]
           ]
         },
         {
           "member": "Leo",
           "team": "qmml-leo",
-          "kaggle_rank": 1659,
+          "kaggle_rank": 1668,
           "score": 0.95762,
           "last_submission": "2026-10-15",
           "new": true,
@@ -291,7 +291,7 @@
             [
               "2026-10-15",
               0.95762,
-              1659
+              1668
             ]
           ]
         }
