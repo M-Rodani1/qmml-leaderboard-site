@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-15T17:33:11Z",
+  "updated_at": "2026-10-15T18:01:22Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,7 +8,7 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31T23:59:00Z",
-      "total_teams": 1952,
+      "total_teams": 1955,
       "entries": [
         {
           "member": "MoRo",
@@ -153,10 +153,10 @@
         {
           "member": "Loss Cause",
           "team": "QMML-Loss-Cause",
-          "kaggle_rank": 1573,
+          "kaggle_rank": 1574,
           "score": 0.95789,
           "last_submission": "2026-10-15",
-          "rank_change": -71,
+          "rank_change": -72,
           "history": [
             [
               "2026-10-08",
@@ -196,17 +196,32 @@
             [
               "2026-10-15",
               0.95789,
-              1573
+              1574
+            ]
+          ]
+        },
+        {
+          "member": "TTJ",
+          "team": "QMML-TTJ",
+          "kaggle_rank": 1646,
+          "score": 0.95764,
+          "last_submission": "2026-10-15",
+          "new": true,
+          "history": [
+            [
+              "2026-10-15",
+              0.95764,
+              1646
             ]
           ]
         },
         {
           "member": "YAK",
           "team": "QMML-YAK",
-          "kaggle_rank": 1650,
+          "kaggle_rank": 1652,
           "score": 0.95762,
           "last_submission": "2026-10-08",
-          "rank_change": -76,
+          "rank_change": -78,
           "history": [
             [
               "2026-10-08",
@@ -246,14 +261,14 @@
             [
               "2026-10-15",
               0.95762,
-              1650
+              1652
             ]
           ]
         },
         {
           "member": "MOY",
           "team": "QMML- MOY",
-          "kaggle_rank": 1652,
+          "kaggle_rank": 1654,
           "score": 0.95762,
           "last_submission": "2026-10-15",
           "new": true,
@@ -261,7 +276,7 @@
             [
               "2026-10-15",
               0.95762,
-              1652
+              1654
             ]
           ]
         }
