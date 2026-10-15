@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-15T18:54:54Z",
+  "updated_at": "2026-10-15T19:07:50Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -113,10 +113,10 @@
         {
           "member": "Manu",
           "team": "QMML - Manu",
-          "kaggle_rank": 1036,
+          "kaggle_rank": 1037,
           "score": 0.95877,
           "last_submission": "2026-10-11",
-          "rank_change": -56,
+          "rank_change": -57,
           "history": [
             [
               "2026-10-10",
@@ -146,17 +146,17 @@
             [
               "2026-10-15",
               0.95877,
-              1036
+              1037
             ]
           ]
         },
         {
           "member": "Loss Cause",
           "team": "QMML-Loss-Cause",
-          "kaggle_rank": 1549,
+          "kaggle_rank": 1550,
           "score": 0.95798,
           "last_submission": "2026-10-15",
-          "rank_change": -47,
+          "rank_change": -48,
           "history": [
             [
               "2026-10-08",
@@ -196,7 +196,7 @@
             [
               "2026-10-15",
               0.95798,
-              1549
+              1550
             ]
           ]
         },
