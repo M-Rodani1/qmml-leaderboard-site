@@ -12,6 +12,8 @@ const parseDeadline = (s) => (s ? new Date(s.length === 10 ? s + "T23:59:00Z" : 
 const byDeadline = (a, b) => (parseDeadline(a.deadline) || Infinity) - (parseDeadline(b.deadline) || Infinity);
 const FINAL_AFTER_MS = 2 * 24 * 60 * 60 * 1000;
 const STALE_MS = 3 * 60 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const motionOK = () => !(typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches);
 const TIE_EPS = 5e-7;
 const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const memberSlug = (name) => "m-" + slugify(name);
@@ -92,6 +94,12 @@ function fmtCountdown(ms) {
   return plural(Math.max(m, 1), "minute");
 }
 
+// The last day before a deadline counts down to the second: "05:12:09".
+function fmtClock(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  return [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60].map((v) => String(v).padStart(2, "0")).join(":");
+}
+
 function fmtAgo(ms) {
   const m = Math.floor(ms / 60000);
   if (m < 1) return "just now";
@@ -158,8 +166,11 @@ function podium(items) {
   const cls = top.length === 3 ? "" : top.length === 2 ? "two" : "one";
   return `<div class="podium ${cls}">` + order.map((i) => {
     const t = top[i];
+    const big = /^#?[\d,]+$/.test(t.big)
+      ? `<span class="count" data-to="${t.big.replace(/[#,]/g, "")}" data-prefix="${t.big.startsWith("#") ? "#" : ""}">${esc(t.big)}</span>`
+      : esc(t.big);
     return `<div class="pl p${Math.min(t.place, 3)}${t.me ? " me" : ""}"><b>${nameBtn(t.name)}</b><small>${esc(t.sub)}${t.tied ? " · tied" : ""}</small>` +
-      `<div class="big">${esc(t.big)}${t.badge || ""}</div><small>${esc(t.small)}</small>` +
+      `<div class="big">${big}${t.badge || ""}</div><small>${esc(t.small)}</small>` +
       (t.gap ? `<small class="gap">${esc(t.gap)}</small>` : "") +
       `<div class="step">${t.place}</div></div>`;
   }).join("") + "</div>";
@@ -196,7 +207,10 @@ function compInfo(c) {
   let when;
   if (status === "final") when = `<span class="chip final">Final results</span>`;
   else if (status === "closed") when = `<span class="chip closed">Closed · provisional</span><span>Final from <strong>${fmtShort(new Date(deadline.getTime() + FINAL_AFTER_MS))}</strong></span>`;
-  else if (deadline) when = `<span>Closes in <strong data-deadline="${esc(c.deadline)}">${fmtCountdown(deadline - Date.now())}</strong> · ${fmtDate(deadline)}</span>`;
+  else if (deadline) {
+    const left = deadline - Date.now();
+    when = `<span>Closes in <strong data-deadline="${esc(c.deadline)}">${left > 0 && left < DAY_MS ? fmtClock(left) : fmtCountdown(left)}</strong> · ${fmtDate(deadline)}</span>`;
+  }
   else when = `<span>Ongoing</span>`;
   return `<p class="comp-info">
     ${when}
@@ -242,8 +256,11 @@ function renderComp(c, me, width) {
     small: `${fmtScore(p.item.score)} · ${fmtDate(p.item.last_submission)}`,
     gap: gapText(sorted, i, c.higher_is_better),
   }));
-  const rows = placed.slice(3).map((p, j) => { const e = p.item, i = j + 3; return `
-    <tr class="${e.member === me ? "me" : ""}">
+  const rows = placed.slice(3).map((p, j) => {
+    const e = p.item, i = j + 3;
+    const base = e.new ? 1e9 : e.rank_change != null ? e.kaggle_rank + e.rank_change : null; // yesterday's Kaggle rank
+    return `
+    <tr class="${e.member === me ? "me" : ""}"${base != null ? ` data-base="${base}"` : ""}>
       <td class="rank c-rank">${placeLabel(p)}</td>
       <td class="c-who">${nameBtn(e.member)}<span class="team">${esc(e.team)}</span></td>
       <td class="num c-krank">${fmtInt(e.kaggle_rank)} / ${fmtInt(c.total_teams)}${moveBadge(e, since)}</td>
@@ -281,7 +298,8 @@ function raceChart(c, me, width = 640) {
     `<text class="tick" x="${M.l - 8}" y="${y(t).toFixed(1)}" dy="0.32em" text-anchor="end">#${fmtInt(t)}</text>`).join("");
   const xIdx = days.length > 4 ? [0, Math.floor((days.length - 1) / 2), days.length - 1] : [0, days.length - 1];
   const xLabels = xIdx.map((i) => `<text class="tick" x="${x(i).toFixed(1)}" y="${H - 10}" text-anchor="${i === 0 ? "start" : i === days.length - 1 ? "end" : "middle"}">${fmtShort(days[i])}</text>`).join("");
-  const others = series.filter((s) => s.name !== focus).map((s) => `<path class="line other" d="${path(s)}"></path>`).join("");
+  const others = series.filter((s) => s.name !== focus)
+    .map((s, k) => `<path class="line other" pathLength="1" style="--k:${k}" d="${path(s)}"></path>`).join("");
   const f = series.find((s) => s.name === focus);
   const end = f.pts[f.pts.length - 1];
   const ex = x(dayIndex.get(end.d)), ey = y(end.r);
@@ -298,7 +316,7 @@ function raceChart(c, me, width = 640) {
     <div class="race-chart" id="${id}" tabindex="0" aria-label="Kaggle rank by day for every society member. Use the left and right arrow keys to step through days.">
       <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Kaggle rank by day. ${esc(who)} is highlighted.">
         ${grid}${xLabels}${others}
-        <path class="line focus" d="${path(f)}"></path>
+        <path class="line focus" pathLength="1" d="${path(f)}"></path>
         <circle class="end" cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="4"></circle>${endLabel}
         <line class="cross" x1="0" x2="0" y1="${M.t}" y2="${H - M.b}" visibility="hidden"></line>
         <rect class="hit" x="${M.l}" y="0" width="${W - M.l - M.r}" height="${H}" fill="transparent"></rect>
@@ -389,9 +407,185 @@ function memberView(data, name, me) {
     <div class="share"><label class="visually-hidden" for="share-url">Link to this page</label><input id="share-url" readonly value="${esc(url)}"><button class="btn small" type="button" data-act="copy-link">Copy link</button></div>`;
 }
 
+// ---- animation ----------------------------------------------------------------
+// Intro effects play when a view opens; all of them respect "reduce motion".
+
+function countUp(root) {
+  root.querySelectorAll(".count").forEach((el) => {
+    const to = Number(el.dataset.to), prefix = el.dataset.prefix || "";
+    const pl = el.closest(".pl");
+    const delay = 450 + (pl && pl.classList.contains("p1") ? 400 : pl && pl.classList.contains("p2") ? 200 : 0);
+    const dur = 900, start = performance.now() + delay;
+    el.textContent = prefix + "0";
+    const frame = (now) => {
+      const k = Math.min(1, Math.max(0, (now - start) / dur));
+      el.textContent = prefix + fmtInt(Math.round(to * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  });
+}
+
+// Table rows start in yesterday's order, then slide to today's.
+function replayMoves(root) {
+  const rows = [...root.querySelectorAll("table.comp tbody tr")];
+  if (rows.length < 2 || rows.some((r) => r.dataset.base == null)) return;
+  const yesterday = [...rows].sort((a, b) => Number(a.dataset.base) - Number(b.dataset.base));
+  if (yesterday.every((r, i) => r === rows[i])) return;
+  const tops = rows.map((r) => r.getBoundingClientRect().top);
+  yesterday.forEach((r, yi) => {
+    const dy = tops[yi] - tops[rows.indexOf(r)];
+    if (dy) r.animate([{ transform: `translateY(${dy}px)` }, { transform: "translateY(0)" }],
+      { duration: 900, delay: 900, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" });
+  });
+}
+
+function confetti(originEl) {
+  if (!motionOK()) return;
+  const cv = document.createElement("canvas");
+  cv.className = "confetti";
+  cv.setAttribute("aria-hidden", "true");
+  document.body.append(cv);
+  const dpr = Math.min(2, window.devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+  cv.width = W * dpr;
+  cv.height = H * dpr;
+  const ctx = cv.getContext("2d");
+  ctx.scale(dpr, dpr);
+  const css = getComputedStyle(document.documentElement);
+  const colors = ["--gold", "--silver", "--bronze", "--accent"].map((v) => css.getPropertyValue(v).trim());
+  const box = originEl ? originEl.getBoundingClientRect() : { left: W / 2, top: H / 3, width: 0 };
+  const ox = box.left + box.width / 2, oy = Math.max(40, box.top);
+  const bits = Array.from({ length: 150 }, () => ({
+    x: ox, y: oy, vx: (Math.random() - 0.5) * 11, vy: -(Math.random() * 10 + 5),
+    r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+    w: 6 + Math.random() * 6, h: 3 + Math.random() * 4, c: colors[Math.floor(Math.random() * colors.length)],
+  }));
+  const start = performance.now(), LIFE = 2800;
+  const frame = (now) => {
+    const age = now - start;
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = Math.max(0, 1 - age / LIFE);
+    for (const b of bits) {
+      b.vy += 0.28; b.vx *= 0.99; b.x += b.vx; b.y += b.vy; b.r += b.vr;
+      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.r); ctx.fillStyle = b.c; ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h); ctx.restore();
+    }
+    if (age < LIFE) requestAnimationFrame(frame); else cv.remove();
+  };
+  requestAnimationFrame(frame);
+}
+
+// Celebrate final results, or you holding 1st place, once per view per visit.
+const cheered = new Set();
+function placeOfMe() {
+  if (!state.me) return null;
+  if (state.view === "season") {
+    const p = standings(state.data).find((x) => x.item.member === state.me);
+    return p ? p.place : null;
+  }
+  const c = state.data.competitions.find((x) => x.slug === state.view);
+  const sorted = c ? byRank(c.entries) : [];
+  const i = sorted.findIndex((e) => e.member === state.me);
+  return i < 0 ? null : withPlaces(sorted, (e) => e.score)[i].place;
+}
+function maybeCelebrate(delay) {
+  const c = state.data.competitions.find((x) => x.slug === state.view);
+  const reason = placeOfMe() === 1 ? "me" : c && compStatus(c) === "final" && c.entries.length ? "final" : null;
+  if (!reason || cheered.has(state.view + reason)) return;
+  cheered.add(state.view + reason);
+  setTimeout(() => confetti(document.querySelector("#panel .pl.p1")), delay);
+}
+
+// A faint drifting network behind the header, echoing the society logo.
+function startNetwork() {
+  const head = document.querySelector(".head");
+  if (!head) return;
+  const cv = document.createElement("canvas");
+  cv.className = "net";
+  cv.setAttribute("aria-hidden", "true");
+  head.prepend(cv);
+  const ctx = cv.getContext("2d");
+  let W = 0, H = 0, nodes = [], color = "#6ccff0", pointer = null, visible = true, frameNo = 0;
+  const readColor = () => { color = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || color; };
+  const size = () => {
+    const r = cv.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = r.width; H = r.height;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(Math.min(70, (W * H) / 9000));
+    nodes = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3 }));
+  };
+  const LINK = 110, REACH = 160;
+  const draw = () => {
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = ctx.fillStyle = color;
+    ctx.lineWidth = 1;
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+      for (let j = i + 1; j < nodes.length; j++) {
+        const b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (d < LINK) { ctx.globalAlpha = (1 - d / LINK) * 0.28; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      }
+      if (pointer) {
+        const d = Math.hypot(a.x - pointer.x, a.y - pointer.y);
+        if (d < REACH) { ctx.globalAlpha = (1 - d / REACH) * 0.55; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(pointer.x, pointer.y); ctx.stroke(); }
+      }
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath(); ctx.arc(a.x, a.y, 1.8, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  };
+  const tick = () => {
+    if (!visible || document.hidden) return;
+    if (++frameNo % 90 === 0) readColor();
+    for (const n of nodes) {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    }
+    draw();
+    requestAnimationFrame(tick);
+  };
+  readColor();
+  size();
+  draw();
+  if (!motionOK()) return; // one still frame
+  head.addEventListener("pointermove", (e) => { const r = cv.getBoundingClientRect(); pointer = { x: e.clientX - r.left, y: e.clientY - r.top }; });
+  head.addEventListener("pointerleave", () => { pointer = null; });
+  let t;
+  window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(() => { size(); draw(); }, 200); });
+  document.getElementById("theme").addEventListener("click", () => requestAnimationFrame(readColor));
+  const resume = () => { if (visible && !document.hidden) requestAnimationFrame(tick); };
+  document.addEventListener("visibilitychange", resume);
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(([en]) => { const was = visible; visible = en.isIntersecting; if (!was && visible) resume(); }).observe(head);
+  }
+  requestAnimationFrame(tick);
+}
+
+// Flip-clock digits: each changed digit flips in.
+function setClock(el, text) {
+  if (!el.classList.contains("clock")) { el.textContent = ""; el.classList.add("clock"); }
+  [...text].forEach((ch, i) => {
+    let d = el.children[i];
+    if (!d) { d = document.createElement("span"); el.append(d); }
+    if (d.textContent === ch) return;
+    d.textContent = ch;
+    if (ch !== ":" && motionOK()) { d.classList.remove("flip"); void d.offsetWidth; d.classList.add("flip"); }
+  });
+}
+
+function tickCountdowns() {
+  document.querySelectorAll("[data-deadline]").forEach((el) => {
+    const left = parseDeadline(el.dataset.deadline) - Date.now();
+    if (left > 0 && left < DAY_MS) { setClock(el, fmtClock(left)); return; }
+    const text = fmtCountdown(left);
+    if (el.classList.contains("clock") || el.textContent !== text) { el.classList.remove("clock"); el.textContent = text; }
+  });
+}
+
 // ---- page state, routing and events -------------------------------------------
 
-const state = { data: null, view: "season", me: null, current: null, past: [], width: 0 };
+const state = { data: null, view: "season", me: null, current: null, past: [], width: 0, rendered: null };
 const isView = (k) => k === "season" || (state.data && state.data.competitions.some((c) => c.slug === k));
 const members = () => [...new Set(state.data.competitions.flatMap((c) => c.entries.map((e) => e.member)))];
 
@@ -413,7 +607,7 @@ function renderTabs() {
   past.classList.toggle("active", state.past.some((c) => c.slug === state.view));
 }
 
-function render() {
+function render(animate = false) {
   // re-rendering replaces the tab buttons, so carry keyboard focus over to the new selected tab
   const tabFocused = document.activeElement && document.activeElement.classList.contains("tab");
   renderTabs();
@@ -421,11 +615,17 @@ function render() {
   const panel = document.getElementById("panel");
   state.width = panel.clientWidth;
   const comp = state.view === "season" ? null : state.data.competitions.find((c) => c.slug === state.view);
+  const play = animate && motionOK();
+  panel.classList.toggle("animate", play);
   panel.innerHTML = comp ? renderComp(comp, state.me, state.width) : renderSeason(state.data, state.me);
   const tab = document.getElementById("tab-" + state.view);
   if (tab) panel.setAttribute("aria-labelledby", tab.id); else panel.removeAttribute("aria-labelledby");
   wireRace(panel);
   tickTimes();
+  tickCountdowns();
+  if (play) { countUp(panel); replayMoves(panel); }
+  if (animate) maybeCelebrate(play ? 1300 : 0);
+  state.rendered = state.view;
   store.set("qmml-tab", state.view);
 }
 
@@ -441,11 +641,11 @@ function route() {
   const dlg = document.getElementById("member");
   if (h.startsWith("m-")) {
     const name = members().find((n) => memberSlug(n) === h);
-    if (name) { render(); openMember(name); return; }
+    if (name) { if (state.rendered !== state.view) render(true); openMember(name); return; }
   }
   if (isView(h)) state.view = h;
   if (dlg.open) dlg.close();
-  render();
+  render(state.rendered !== state.view); // animate only when the view changes
 }
 
 function setMe(name) {
@@ -454,6 +654,7 @@ function setMe(name) {
   render();
   const dlg = document.getElementById("member");
   if (dlg.open) openMember(dlg.dataset.member);
+  if (name && placeOfMe() === 1) maybeCelebrate(250);
 }
 
 async function copyText(text, btn, fallbackEl) {
@@ -474,9 +675,6 @@ function tickTimes() {
   meta.textContent = "Updated " + fmtAgo(age) + (age > STALE_MS ? " · may be out of date" : "");
   meta.title = t.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
   meta.classList.toggle("stale", age > STALE_MS);
-  document.querySelectorAll("[data-deadline]").forEach((el) => {
-    el.textContent = fmtCountdown(parseDeadline(el.dataset.deadline) - Date.now());
-  });
 }
 
 const THEMES = ["system", "light", "dark"];
@@ -544,6 +742,7 @@ function wire() {
   });
   window.addEventListener("hashchange", route);
   setInterval(tickTimes, 60000);
+  setInterval(tickCountdowns, 1000);
 }
 
 async function init() {
@@ -564,10 +763,11 @@ async function init() {
   state.view = isView(h) ? h : isView(saved) ? saved : "season";
   wire();
   route();
+  startNetwork();
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { withPlaces, standings, gapText, fmtCountdown, fmtAgo, compStatus, pickCurrent, sparkline,
+  module.exports = { withPlaces, standings, gapText, fmtCountdown, fmtClock, fmtAgo, compStatus, pickCurrent, sparkline,
     parseDeadline, niceTicks, memberSlug, teamName, raceChart };
 }
 if (typeof document !== "undefined" && document.getElementById("panel")) init();

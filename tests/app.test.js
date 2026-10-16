@@ -111,3 +111,9 @@ test("race chart needs two days and highlights you, else the leader", () => {
   const oneDay = { slug: "oct", entries: [{ ...e("A", 1, 0.9), history: [["2026-10-10", 0.9, 1]] }] };
   assert.strictEqual(app.raceChart(oneDay, null), "");
 });
+
+test("last-day countdown is a clock", () => {
+  assert.strictEqual(app.fmtClock(5 * 3600e3 + 12 * 60e3 + 9e3), "05:12:09");
+  assert.strictEqual(app.fmtClock(59e3), "00:00:59");
+  assert.strictEqual(app.fmtClock(-5), "00:00:00");
+});
