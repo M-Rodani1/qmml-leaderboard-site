@@ -117,3 +117,39 @@ test("last-day countdown is a clock", () => {
   assert.strictEqual(app.fmtClock(59e3), "00:00:59");
   assert.strictEqual(app.fmtClock(-5), "00:00:00");
 });
+
+test("overtakes are found where two rank lines cross", () => {
+  const days = ["2026-10-09", "2026-10-10", "2026-10-11"];
+  const series = [
+    { name: "A", pts: [{ d: days[0], r: 10 }, { d: days[1], r: 20 }, { d: days[2], r: 25 }] },
+    { name: "B", pts: [{ d: days[0], r: 20 }, { d: days[1], r: 10 }, { d: days[2], r: 5 }] },
+    { name: "C", pts: [{ d: days[1], r: 100 }, { d: days[2], r: 90 }] },
+  ];
+  const pts = app.crossings(series, days, (i) => i * 100, (r) => r);
+  assert.strictEqual(pts.length, 1);
+  assert.deepStrictEqual(pts[0], { x: 50, y: 15 });
+});
+
+test("replay interpolates rank between days and hides members before they appear", () => {
+  const idx = [{ i: 1, r: 100 }, { i: 3, r: 60 }];
+  assert.strictEqual(app.rankAt(idx, 0.5), null);
+  assert.strictEqual(app.rankAt(idx, 2), 80);
+  assert.strictEqual(app.rankAt(idx, 3), 60);
+  assert.strictEqual(app.rankAt(idx, 4), 60);
+});
+
+test("ticker headlines", () => {
+  const now = Date.parse("2026-10-16T12:00:00Z");
+  const cur = { slug: "oct", title: "Airline", status: "open", deadline: "2026-10-31T23:59:00Z", total_teams: 100, entries: [
+    { ...e("Seelie", 600, 0.96009), rank_change: 5 }, { ...e("MoRo", 700, 0.95946), rank_change: 42 }, { ...e("Manu", 800, 0.9), new: true },
+  ] };
+  const items = app.tickerItems({ competitions: [cur] }, cur, now);
+  assert.strictEqual(items[0], "Seelie leads by 0.00063");
+  assert.ok(items.includes("MoRo ▲42") && items.includes("Seelie ▲5"));
+  assert.ok(items.includes("Manu joined"));
+  assert.ok(items.includes("3 members competing"));
+  assert.ok(items.some((t) => /days? .* left$/.test(t)));
+  assert.match(items[items.length - 1], /tops the season with 3 points$/);
+  const tie = { ...cur, entries: [e("A", 1, 0.9), e("B", 2, 0.9)] };
+  assert.strictEqual(app.tickerItems({ competitions: [tie] }, tie, now)[0], "A and B share 1st");
+});
