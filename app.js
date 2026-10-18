@@ -156,6 +156,7 @@ function niceTicks(lo, hi, count = 4) {
 
 // ---- views ------------------------------------------------------------------
 
+const CROWN = `<svg class="crown" viewBox="0 0 24 16" aria-hidden="true"><path d="M2 14L1 4l6 4 5-7 5 7 6-4-1 10z"></path></svg>`;
 const nameBtn = (name) => `<button class="name-link" type="button" data-member="${esc(name)}">${esc(name)}</button>`;
 const youBox = (html, extra = "") => `<div class="you"><span class="you-tag">You</span><span class="you-text">${html}</span><button class="link" type="button" data-act="not-me">Not you?</button>${extra}</div>`;
 const youHint = () => `<p class="you-hint">Tip: click your name and choose “This is me” to follow your place.</p>`;
@@ -171,7 +172,7 @@ function podium(items) {
       : esc(t.big);
     const classes = ["pl", `p${Math.min(t.place, 3)}`, t.me && "me", t.isNew && "is-new"].filter(Boolean).join(" ");
     return `<div class="${classes}" data-who="${esc(t.name)}" style="view-transition-name:pl-${slugify(t.name) || "member"}">` +
-      `<b>${nameBtn(t.name)}</b><small>${esc(t.sub)}${t.tied ? " · tied" : ""}</small>` +
+      `<b>${t.place === 1 ? CROWN : ""}${nameBtn(t.name)}</b><small>${esc(t.sub)}${t.tied ? " · tied" : ""}</small>` +
       `<div class="big">${big}${t.badge || ""}</div><small>${esc(t.small)}</small>` +
       (t.gap ? `<small class="gap">${esc(t.gap)}</small>` : "") +
       `<div class="step">${t.place}</div><div class="pl-back" aria-hidden="true">${ordinal(t.place)}</div></div>`;
@@ -252,7 +253,7 @@ function youComp(c, sorted, placed, me) {
   return youBox(`<b>${ordinal(p.place)}${p.tied ? " (tied)" : ""}</b> of ${sorted.length} · Kaggle #${fmtInt(e.kaggle_rank)}${moveBadge(e, c.movement_since)} · ${esc(gapText(sorted, i, c.higher_is_better))}`, bar);
 }
 
-function renderComp(c, me, width) {
+function renderComp(c, me, width, visit = null) {
   const status = compStatus(c);
   const stamp = status === "open" ? "" : `<span class="stamp ${status}">${status === "final" ? "Final" : "Closed"}</span>`;
   const head = `<div class="comp-head">${stamp}<h2>${esc(c.title)}</h2>${compInfo(c)}</div>`;
@@ -268,7 +269,8 @@ function renderComp(c, me, width) {
   }));
   const rows = placed.slice(3).map((p, j) => {
     const e = p.item, i = j + 3;
-    const base = e.new ? 1e9 : e.rank_change != null ? e.kaggle_rank + e.rank_change : null; // yesterday's Kaggle rank
+    // where this member was before: at your last visit if we know it, else yesterday
+    const base = visit ? (visit[e.member] ?? 1e9) : e.new ? 1e9 : e.rank_change != null ? e.kaggle_rank + e.rank_change : null;
     const cls = [e.member === me && "me", e.new && "is-new"].filter(Boolean).join(" ");
     return `
     <tr class="${cls}" data-who="${esc(e.member)}"${base != null ? ` data-base="${base}"` : ""}>
@@ -471,17 +473,23 @@ function memberView(data, name, me) {
 const DIGITS = "01234567890123456789".split("").map((d) => `<span>${d}</span>`).join("");
 const ROLL_START = { p1: 800, p2: 600, p3: 400 };
 const CEREMONY_ROLL = { p1: 2500, p2: 1600, p3: 700 }; // after each card flips
-function odometer(root) {
+function odometer(root, from = null, startMs = null) {
   const ceremony = root.classList.contains("ceremony");
   root.querySelectorAll(".count").forEach((el) => {
     const text = el.textContent, pl = el.closest(".pl");
     const key = pl ? ["p1", "p2", "p3"].find((k) => pl.classList.contains(k)) : null;
-    const start = (ceremony ? CEREMONY_ROLL : ROLL_START)[key] || 400;
+    const old = from && pl ? from.get(pl.dataset.who) : null;
+    if (from && (old == null || old === text)) return; // live update: only numbers that changed
+    const start = startMs ?? (ceremony ? CEREMONY_ROLL : ROLL_START)[key] ?? 400;
+    const prevDigits = old && old.length === text.length ? old : null;
     el.classList.add("odo-on");
     el.style.setProperty("--base", start + "ms");
-    el.innerHTML = `<span class="visually-hidden">${esc(text)}</span>` + [...text].map((ch, i) => /\d/.test(ch)
-      ? `<span class="odo" aria-hidden="true"><span class="odo-strip" style="--to:${10 + Number(ch)};--i:${i}">${DIGITS}</span></span>`
-      : `<span class="odo-sym" aria-hidden="true">${esc(ch)}</span>`).join("");
+    el.innerHTML = `<span class="visually-hidden">${esc(text)}</span>` + [...text].map((ch, i) => {
+      if (!/\d/.test(ch)) return `<span class="odo-sym" aria-hidden="true">${esc(ch)}</span>`;
+      const n = Number(ch), o = prevDigits && /\d/.test(prevDigits[i]) ? Number(prevDigits[i]) : 0;
+      const to = prevDigits ? (n >= o ? n : n + 10) : 10 + n; // always roll forwards
+      return `<span class="odo" aria-hidden="true"><span class="odo-strip" style="--from:${o};--to:${to};--i:${i}">${DIGITS}</span></span>`;
+    }).join("");
     requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("roll")));
   });
 }
@@ -563,11 +571,11 @@ function replayRace(el) {
   requestAnimationFrame(frame);
 }
 
-function toast(text) {
+function toast(text, kind = "") {
   const box = document.getElementById("toasts");
   if (!box) return;
   const t = document.createElement("div");
-  t.className = "toast";
+  t.className = "toast" + (kind ? " " + kind : "");
   t.textContent = text;
   box.append(t);
   setTimeout(() => t.classList.add("out"), 4200);
@@ -860,9 +868,225 @@ function tickCountdowns() {
   });
 }
 
+// ---- live updates, your last visit, personal bests, the crown, the tab icon -----
+
+const POLL_MS = 3 * 60 * 1000;
+const SEEN_KEY = "qmml-seen", PB_KEY = "qmml-pb";
+const readJSON = (key) => { try { return JSON.parse(store.get(key) || "null"); } catch (_) { return null; } };
+
+// Kaggle ranks per member per competition, as you last saw them.
+function snapshot(data, at = Date.now()) {
+  const comps = {};
+  for (const c of data.competitions) comps[c.slug] = Object.fromEntries(c.entries.map((e) => [e.member, e.kaggle_rank]));
+  return { at, updated: data.updated_at, comps };
+}
+function saveSeen() { if (state.data && !state.data.sample) store.set(SEEN_KEY, JSON.stringify(snapshot(state.data))); }
+
+// What changed in a competition since `prev` ({member: kaggle_rank}).
+function changesSince(prev, c) {
+  if (!prev || !c) return null;
+  const now = byRank(c.entries);
+  const joined = now.filter((e) => prev[e.member] == null).map((e) => e.member);
+  const kept = now.filter((e) => prev[e.member] != null);
+  const moves = kept.map((e) => ({ member: e.member, delta: prev[e.member] - e.kaggle_rank })); // positive = up
+  const overtakes = [];
+  for (let i = 0; i < kept.length; i++) {
+    for (let j = i + 1; j < kept.length; j++) {
+      if (prev[kept[i].member] > prev[kept[j].member]) overtakes.push({ by: kept[i].member, over: kept[j].member });
+    }
+  }
+  return { joined, moves, overtakes };
+}
+
+// The single leader of a view, or null when 1st place is shared.
+function leaderOf(data, view) {
+  if (view === "season") {
+    const s = standings(data);
+    return s.length && !s[0].tied ? s[0].item.member : null;
+  }
+  const c = data.competitions.find((x) => x.slug === view);
+  const sorted = c ? byRank(c.entries) : [];
+  if (!sorted.length || (sorted[1] && Math.abs(sorted[0].score - sorted[1].score) < TIE_EPS)) return null;
+  return sorted[0].member;
+}
+
+function showSince() {
+  const el = document.getElementById("since"), seen = state.seen, c = state.current;
+  if (!el) return;
+  el.hidden = true;
+  if (!seen || !c || state.data.sample || seen.updated === state.data.updated_at) return;
+  const parts = [];
+  const ch = changesSince(seen.comps[c.slug], c);
+  if (!seen.comps[c.slug]) parts.push(`New competition: ${c.title}`);
+  else if (ch) {
+    if (ch.overtakes.length) parts.push(plural(ch.overtakes.length, "overtake"));
+    const mine = state.me && ch.moves.find((m) => m.member === state.me);
+    if (mine && mine.delta) parts.push(`You ${mine.delta > 0 ? "▲" : "▼"}${fmtInt(Math.abs(mine.delta))}`);
+    const top = ch.moves.filter((m) => m.delta > 0 && m.member !== state.me).sort((a, b) => b.delta - a.delta)[0];
+    if (top) parts.push(`${top.member} ▲${fmtInt(top.delta)}`);
+    ch.joined.slice(0, 3).forEach((n) => parts.push(`${n} joined`));
+  }
+  if (!parts.length) return;
+  el.querySelector(".since-text").textContent = `Since your last visit (${fmtShort(seen.at)}): ${parts.join(" · ")}`;
+  el.hidden = false;
+}
+
+// The crown flies from the old leader to the new one.
+function crownHandover(oldName, newName, fromRect) {
+  if (!oldName || !newName || oldName === newName) return;
+  toast(`👑 ${newName} took 1st place`, "crowned");
+  const target = document.querySelector("#panel .pl.p1 .crown");
+  if (!target || !motionOK() || typeof target.animate !== "function") return;
+  const oldCard = [...document.querySelectorAll("#panel .pl[data-who]")].find((el) => el.dataset.who === oldName);
+  const start = fromRect || (oldCard && oldCard.querySelector("b").getBoundingClientRect());
+  if (!start) return;
+  const end = target.getBoundingClientRect();
+  const fly = target.cloneNode(true);
+  fly.classList.add("crown-fly");
+  Object.assign(fly.style, { left: start.left + "px", top: start.top + "px", width: end.width + "px", height: end.height + "px" });
+  document.body.append(fly);
+  target.style.visibility = "hidden";
+  const dx = end.left - start.left, dy = end.top - start.top;
+  fly.animate([
+    { transform: "translate(0, 0) rotate(-8deg) scale(1)" },
+    { transform: `translate(${dx / 2}px, ${dy / 2 - 70}px) rotate(-30deg) scale(1.8)`, offset: 0.5 },
+    { transform: `translate(${dx}px, ${dy}px) rotate(-8deg) scale(1)` },
+  ], { duration: 1200, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }).finished.then(() => {
+    fly.remove();
+    target.style.visibility = "";
+    target.classList.add("landed");
+  });
+}
+
+// Celebrate beating your own best score in the current competition.
+function checkPB() {
+  const c = state.current, me = state.me;
+  if (!c || !me || state.data.sample) return;
+  const e = c.entries.find((x) => x.member === me);
+  if (!e) return;
+  const pbs = readJSON(PB_KEY) || {}, key = `${c.slug}|${me}`, old = pbs[key];
+  const better = old == null || (c.higher_is_better ? e.score > old : e.score < old);
+  if (old != null && better) {
+    toast(`★ New personal best: ${fmtScore(old)} → ${fmtScore(e.score)}`, "pb");
+    setTimeout(() => confetti(document.querySelector("#panel .you")), 500);
+  }
+  if (better) { pbs[key] = e.score; store.set(PB_KEY, JSON.stringify(pbs)); }
+}
+
+// Your Kaggle rank change in the current competition: since your last visit, else since yesterday.
+function myMove() {
+  const c = state.current, me = state.me;
+  const e = c && me && c.entries.find((x) => x.member === me);
+  if (!e) return 0;
+  const before = state.seenBase && state.seenBase.slug === c.slug ? state.seenBase.ranks[me] : null;
+  return before != null ? before - e.kaggle_rank : e.rank_change || 0;
+}
+
+// The browser tab icon: a pulsing dot for unseen updates, and your ▲ / ▼.
+const fav = { base: null, img: null, timer: null, on: false, title: null };
+function updateFavicon() {
+  const link = document.querySelector('link[rel="icon"]');
+  if (!link) return;
+  fav.base = fav.base || link.getAttribute("href");
+  fav.title = fav.title || document.title;
+  const move = Math.sign(myMove()), dot = !!state.unseen;
+  document.title = (dot ? "● " : "") + fav.title;
+  clearInterval(fav.timer);
+  if (!dot && !move) { link.setAttribute("href", fav.base); return; }
+  const cv = document.createElement("canvas");
+  cv.width = cv.height = 64;
+  const ctx = cv.getContext && cv.getContext("2d");
+  if (!ctx) return;
+  const draw = () => {
+    ctx.clearRect(0, 0, 64, 64);
+    ctx.save(); ctx.beginPath(); ctx.arc(32, 32, 32, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(fav.img, 0, 0, 64, 64); ctx.restore();
+    if (move) { // triangle, bottom right
+      ctx.fillStyle = move > 0 ? "#22c55e" : "#ef4444";
+      ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 3; ctx.beginPath();
+      if (move > 0) { ctx.moveTo(48, 36); ctx.lineTo(63, 62); ctx.lineTo(33, 62); } else { ctx.moveTo(33, 38); ctx.lineTo(63, 38); ctx.lineTo(48, 63); }
+      ctx.closePath(); ctx.stroke(); ctx.fill();
+    }
+    if (dot) { // dot, top right; pulses
+      ctx.fillStyle = "#6ccff0"; ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(50, 14, fav.on ? 13 : 10, 0, Math.PI * 2); ctx.stroke(); ctx.fill();
+    }
+    try { link.setAttribute("href", cv.toDataURL("image/png")); } catch (_) {}
+  };
+  const go = () => {
+    draw();
+    if (dot && motionOK()) fav.timer = setInterval(() => { fav.on = !fav.on; draw(); }, 800);
+  };
+  if (fav.img && fav.img.complete) go();
+  else { fav.img = new Image(); fav.img.onload = go; fav.img.src = fav.base; }
+}
+
+// Fresh data arrived: slide, flash and roll everything that changed, in place.
+function applyUpdate(next) {
+  const prev = state.data, panel = document.getElementById("panel");
+  const where = new Map(), cells = new Map(), counts = new Map();
+  panel.querySelectorAll("tr[data-who], .pl[data-who]").forEach((el) => {
+    const key = (el.matches("tr") ? "r:" : "p:") + el.dataset.who;
+    where.set(key, el.getBoundingClientRect());
+    if (el.matches("tr")) cells.set(el.dataset.who, [...el.cells].map((td) => td.textContent));
+    const count = el.matches(".pl") && el.querySelector(".count");
+    if (count) counts.set(el.dataset.who, (count.querySelector(".visually-hidden") || count).textContent);
+  });
+  const oldLeader = leaderOf(prev, state.view);
+  const oldCrown = panel.querySelector(".crown");
+  const crownRect = oldCrown && oldCrown.getBoundingClientRect();
+  const prevCurrent = state.current;
+
+  state.data = next;
+  state.current = pickCurrent(next.competitions);
+  state.past = next.competitions.filter((c) => c !== state.current).sort(byDeadline).reverse();
+  if (!isView(state.view)) state.view = "season";
+  render(false);
+
+  if (motionOK()) {
+    panel.querySelectorAll("tr[data-who], .pl[data-who]").forEach((el) => {
+      const old = where.get((el.matches("tr") ? "r:" : "p:") + el.dataset.who);
+      if (!old) { el.classList.add("arrived"); return; }
+      const now = el.getBoundingClientRect(), dx = old.left - now.left, dy = old.top - now.top;
+      if ((dx || dy) && typeof el.animate === "function") {
+        el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: 700, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" });
+      }
+    });
+    odometer(panel, counts, 150);
+  }
+  panel.querySelectorAll("tr[data-who]").forEach((tr) => {
+    const old = cells.get(tr.dataset.who);
+    if (old) [...tr.cells].forEach((td, i) => { if (i > 0 && old[i] !== td.textContent) td.classList.add("flash"); });
+  });
+
+  crownHandover(oldLeader, leaderOf(next, state.view), crownRect);
+  const was = prevCurrent && prev.competitions.find((c) => c.slug === prevCurrent.slug);
+  const ch = was && state.current && was.slug === state.current.slug
+    ? changesSince(Object.fromEntries(was.entries.map((e) => [e.member, e.kaggle_rank])), state.current) : null;
+  if (ch) {
+    ch.overtakes.slice(0, 3).forEach((o, i) => setTimeout(() => toast(`▲ ${o.by} overtook ${o.over}`), 300 + i * 700));
+    ch.joined.forEach((n, i) => setTimeout(() => toast(`✦ ${n} joined ${state.current.title}`), 600 + i * 700));
+  }
+  const meta = document.getElementById("meta");
+  meta.classList.remove("pulse"); void meta.offsetWidth; meta.classList.add("pulse");
+  buildTicker();
+  checkPB();
+  const dlg = document.getElementById("member");
+  if (dlg.open) openMember(dlg.dataset.member);
+  if (document.hidden) state.unseen = true; else saveSeen();
+  updateFavicon();
+}
+
+async function poll() {
+  state.lastPoll = Date.now();
+  let next;
+  try { next = await fetch(DATA_URL, { cache: "no-cache" }).then((r) => r.json()); } catch (_) { return; }
+  if (next && next.updated_at && next.updated_at !== state.data.updated_at && Array.isArray(next.competitions)) applyUpdate(next);
+}
+
 // ---- page state, routing and events -------------------------------------------
 
-const state = { data: null, view: "season", me: null, current: null, past: [], width: 0, rendered: null };
+const state = { data: null, view: "season", me: null, current: null, past: [], width: 0, rendered: null,
+  seen: null, seenBase: null, unseen: false, lastPoll: 0 };
 const isView = (k) => k === "season" || (state.data && state.data.competitions.some((c) => c.slug === k));
 const members = () => [...new Set(state.data.competitions.flatMap((c) => c.entries.map((e) => e.member)))];
 
@@ -898,7 +1122,8 @@ function render(animate = false, opts = {}) {
   panel.classList.toggle("vt", play && !!opts.vt);
   panel.classList.toggle("ceremony", ceremony);
   lit = null;
-  panel.innerHTML = comp ? renderComp(comp, state.me, state.width) : renderSeason(state.data, state.me);
+  const since = comp && state.seenBase && state.seenBase.slug === comp.slug ? state.seenBase.ranks : null;
+  panel.innerHTML = comp ? renderComp(comp, state.me, state.width, since) : renderSeason(state.data, state.me);
   const tab = document.getElementById("tab-" + state.view);
   if (tab) panel.setAttribute("aria-labelledby", tab.id); else panel.removeAttribute("aria-labelledby");
   wireRace(panel);
@@ -942,6 +1167,8 @@ function setMe(name) {
   const dlg = document.getElementById("member");
   if (dlg.open) openMember(dlg.dataset.member);
   if (name && placeOfMe() === 1) maybeCelebrate(250);
+  checkPB();
+  updateFavicon();
 }
 
 async function copyText(text, btn, fallbackEl) {
@@ -1042,6 +1269,17 @@ function wire() {
     }, 150);
   });
   window.addEventListener("hashchange", route);
+  document.getElementById("since-close").addEventListener("click", () => { document.getElementById("since").hidden = true; });
+  document.getElementById("since-replay").addEventListener("click", () => {
+    if (!state.current) return;
+    if (state.view === state.current.slug) render(true); else location.hash = state.current.slug;
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) return;
+    if (state.unseen) setTimeout(() => { state.unseen = false; saveSeen(); updateFavicon(); }, 1500);
+    if (!window.__DATA__ && Date.now() - state.lastPoll > 60000) poll();
+  });
+  if (!window.__DATA__) setInterval(poll, POLL_MS);
   setInterval(tickTimes, 60000);
   setInterval(tickCountdowns, 1000);
 }
@@ -1062,15 +1300,28 @@ async function init() {
   document.getElementById("notice").hidden = !data.sample;
   const h = decodeURIComponent(location.hash.slice(1)), saved = store.get("qmml-tab");
   state.view = isView(h) ? h : isView(saved) ? saved : "season";
+  state.seen = readJSON(SEEN_KEY);
+  if (state.seen && state.current && state.seen.comps && state.seen.comps[state.current.slug] && state.seen.updated !== data.updated_at) {
+    state.seenBase = { slug: state.current.slug, ranks: state.seen.comps[state.current.slug] };
+  }
   wire();
   route();
   buildTicker();
+  showSince();
   startNetwork();
+  // the crown moves if 1st place changed hands since you were last here
+  if (state.seenBase && state.view === state.seenBase.slug) {
+    const ranks = state.seenBase.ranks, names = Object.keys(ranks).sort((a, b) => ranks[a] - ranks[b]);
+    setTimeout(() => crownHandover(names[0], leaderOf(data, state.view), null), motionOK() ? 1700 : 0);
+  }
+  checkPB();
+  updateFavicon();
+  saveSeen();
 }
 
 if (typeof module !== "undefined") {
   module.exports = { withPlaces, standings, gapText, fmtCountdown, fmtClock, fmtAgo, compStatus, pickCurrent, sparkline,
-    crossings, rankAt, tickerItems,
+    crossings, rankAt, tickerItems, changesSince, leaderOf, snapshot,
     parseDeadline, niceTicks, memberSlug, teamName, raceChart };
 }
 if (typeof document !== "undefined" && document.getElementById("panel")) init();

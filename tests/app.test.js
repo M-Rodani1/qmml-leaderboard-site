@@ -153,3 +153,28 @@ test("ticker headlines", () => {
   const tie = { ...cur, entries: [e("A", 1, 0.9), e("B", 2, 0.9)] };
   assert.strictEqual(app.tickerItems({ competitions: [tie] }, tie, now)[0], "A and B share 1st");
 });
+
+test("changes since your last visit: joins, moves and society overtakes", () => {
+  const prev = { A: 10, B: 20, C: 30 };
+  const c = { entries: [e("D", 5, 0.99), e("B", 15, 0.98), e("A", 25, 0.97), e("C", 31, 0.96)] };
+  const ch = app.changesSince(prev, c);
+  assert.deepStrictEqual(ch.joined, ["D"]);
+  assert.deepStrictEqual(ch.moves.map((m) => [m.member, m.delta]), [["B", 5], ["A", -15], ["C", -1]]);
+  assert.deepStrictEqual(ch.overtakes, [{ by: "B", over: "A" }]);
+  assert.strictEqual(app.changesSince(null, c), null);
+});
+
+test("leader of a view, or nobody when 1st is shared", () => {
+  const data = { competitions: [
+    { slug: "oct", total_teams: 100, entries: [e("A", 1, 0.9), e("B", 2, 0.8)] },
+    { slug: "tie", total_teams: 100, entries: [e("A", 1, 0.9), e("B", 2, 0.9)] },
+  ] };
+  assert.strictEqual(app.leaderOf(data, "oct"), "A");
+  assert.strictEqual(app.leaderOf(data, "tie"), null);
+  assert.strictEqual(app.leaderOf({ competitions: [data.competitions[0]] }, "season"), "A");
+});
+
+test("snapshot keeps each member's Kaggle rank per competition", () => {
+  const snap = app.snapshot({ updated_at: "x", competitions: [{ slug: "oct", entries: [e("A", 7, 0.9)] }] }, 123);
+  assert.deepStrictEqual(snap, { at: 123, updated: "x", comps: { oct: { A: 7 } } });
+});
