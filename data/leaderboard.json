@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-21T00:08:49Z",
+  "updated_at": "2026-10-21T04:47:33Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,15 +8,15 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31T23:59:00Z",
-      "total_teams": 2528,
+      "total_teams": 2549,
       "entries": [
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 266,
+          "kaggle_rank": 274,
           "score": 0.96186,
           "last_submission": "2026-10-16",
-          "rank_change": -1,
+          "rank_change": -9,
           "history": [
             [
               "2026-10-07",
@@ -91,17 +91,17 @@
             [
               "2026-10-21",
               0.96186,
-              266
+              274
             ]
           ]
         },
         {
           "member": "TTJ",
           "team": "QMML-TTJ",
-          "kaggle_rank": 1040,
+          "kaggle_rank": 1050,
           "score": 0.96044,
           "last_submission": "2026-10-20",
-          "rank_change": -2,
+          "rank_change": -12,
           "history": [
             [
               "2026-10-15",
@@ -136,17 +136,17 @@
             [
               "2026-10-21",
               0.96044,
-              1040
+              1050
             ]
           ]
         },
         {
           "member": "Seelie",
           "team": "QMML-Seelie",
-          "kaggle_rank": 1171,
+          "kaggle_rank": 1180,
           "score": 0.96009,
           "last_submission": "2026-10-09",
-          "rank_change": -3,
+          "rank_change": -12,
           "history": [
             [
               "2026-10-09",
@@ -211,17 +211,17 @@
             [
               "2026-10-21",
               0.96009,
-              1171
+              1180
             ]
           ]
         },
         {
           "member": "Manu",
           "team": "QMML - Manu",
-          "kaggle_rank": 1339,
+          "kaggle_rank": 1348,
           "score": 0.95877,
           "last_submission": "2026-10-11",
-          "rank_change": -3,
+          "rank_change": -12,
           "history": [
             [
               "2026-10-10",
@@ -281,17 +281,17 @@
             [
               "2026-10-21",
               0.95877,
-              1339
+              1348
             ]
           ]
         },
         {
           "member": "Loss Cause",
           "team": "QMML-Loss-Cause",
-          "kaggle_rank": 1978,
+          "kaggle_rank": 1994,
           "score": 0.95799,
           "last_submission": "2026-10-18",
-          "rank_change": -5,
+          "rank_change": -21,
           "history": [
             [
               "2026-10-08",
@@ -361,17 +361,17 @@
             [
               "2026-10-21",
               0.95799,
-              1978
+              1994
             ]
           ]
         },
         {
           "member": "YAK",
           "team": "QMML-YAK",
-          "kaggle_rank": 2116,
+          "kaggle_rank": 2134,
           "score": 0.95762,
           "last_submission": "2026-10-08",
-          "rank_change": -4,
+          "rank_change": -22,
           "history": [
             [
               "2026-10-08",
@@ -441,17 +441,17 @@
             [
               "2026-10-21",
               0.95762,
-              2116
+              2134
             ]
           ]
         },
         {
           "member": "MOY",
           "team": "QMML- MOY",
-          "kaggle_rank": 2118,
+          "kaggle_rank": 2136,
           "score": 0.95762,
           "last_submission": "2026-10-15",
-          "rank_change": -4,
+          "rank_change": -22,
           "history": [
             [
               "2026-10-15",
@@ -486,17 +486,17 @@
             [
               "2026-10-21",
               0.95762,
-              2118
+              2136
             ]
           ]
         },
         {
           "member": "Leo",
           "team": "qmml-leo",
-          "kaggle_rank": 2120,
+          "kaggle_rank": 2138,
           "score": 0.95762,
           "last_submission": "2026-10-15",
-          "rank_change": -4,
+          "rank_change": -22,
           "history": [
             [
               "2026-10-15",
@@ -531,7 +531,7 @@
             [
               "2026-10-21",
               0.95762,
-              2120
+              2138
             ]
           ]
         }
