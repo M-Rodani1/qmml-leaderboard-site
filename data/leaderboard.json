@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-10-25T17:45:29Z",
+  "updated_at": "2026-10-25T20:27:13Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -8,15 +8,15 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-10-31T23:59:00Z",
-      "total_teams": 3028,
+      "total_teams": 3043,
       "entries": [
         {
           "member": "MoRo",
           "team": "qmml-MoRo",
-          "kaggle_rank": 114,
+          "kaggle_rank": 120,
           "score": 0.96213,
           "last_submission": "2026-10-24",
-          "rank_change": -18,
+          "rank_change": -24,
           "history": [
             [
               "2026-10-07",
@@ -111,17 +111,17 @@
             [
               "2026-10-25",
               0.96213,
-              114
+              120
             ]
           ]
         },
         {
           "member": "TTJ",
           "team": "QMML-TTJ",
-          "kaggle_rank": 1273,
+          "kaggle_rank": 1286,
           "score": 0.96044,
           "last_submission": "2026-10-20",
-          "rank_change": -43,
+          "rank_change": -56,
           "history": [
             [
               "2026-10-15",
@@ -176,17 +176,17 @@
             [
               "2026-10-25",
               0.96044,
-              1273
+              1286
             ]
           ]
         },
         {
           "member": "Seelie",
           "team": "QMML-Seelie",
-          "kaggle_rank": 1423,
+          "kaggle_rank": 1434,
           "score": 0.96009,
           "last_submission": "2026-10-09",
-          "rank_change": -52,
+          "rank_change": -63,
           "history": [
             [
               "2026-10-09",
@@ -271,17 +271,17 @@
             [
               "2026-10-25",
               0.96009,
-              1423
+              1434
             ]
           ]
         },
         {
           "member": "Manu",
           "team": "QMML - Manu",
-          "kaggle_rank": 1615,
+          "kaggle_rank": 1625,
           "score": 0.95877,
           "last_submission": "2026-10-11",
-          "rank_change": -62,
+          "rank_change": -72,
           "history": [
             [
               "2026-10-10",
@@ -361,17 +361,17 @@
             [
               "2026-10-25",
               0.95877,
-              1615
+              1625
             ]
           ]
         },
         {
           "member": "Loss Cause",
           "team": "QMML-Loss-Cause",
-          "kaggle_rank": 2215,
+          "kaggle_rank": 2226,
           "score": 0.95817,
           "last_submission": "2026-10-24",
-          "rank_change": -81,
+          "rank_change": -92,
           "history": [
             [
               "2026-10-08",
@@ -461,17 +461,17 @@
             [
               "2026-10-25",
               0.95817,
-              2215
+              2226
             ]
           ]
         },
         {
           "member": "YAK",
           "team": "QMML-YAK",
-          "kaggle_rank": 2555,
+          "kaggle_rank": 2568,
           "score": 0.95762,
           "last_submission": "2026-10-08",
-          "rank_change": -93,
+          "rank_change": -106,
           "history": [
             [
               "2026-10-08",
@@ -561,17 +561,17 @@
             [
               "2026-10-25",
               0.95762,
-              2555
+              2568
             ]
           ]
         },
         {
           "member": "Jonah",
           "team": "QMML-Jonah",
-          "kaggle_rank": 2556,
+          "kaggle_rank": 2569,
           "score": 0.95762,
           "last_submission": "2026-10-22",
-          "rank_change": -93,
+          "rank_change": -106,
           "history": [
             [
               "2026-10-22",
@@ -591,17 +591,17 @@
             [
               "2026-10-25",
               0.95762,
-              2556
+              2569
             ]
           ]
         },
         {
           "member": "MOY",
           "team": "QMML- MOY",
-          "kaggle_rank": 2557,
+          "kaggle_rank": 2570,
           "score": 0.95762,
           "last_submission": "2026-10-22",
-          "rank_change": -93,
+          "rank_change": -106,
           "history": [
             [
               "2026-10-15",
@@ -656,17 +656,17 @@
             [
               "2026-10-25",
               0.95762,
-              2557
+              2570
             ]
           ]
         },
         {
           "member": "BurningMen'sSoul",
           "team": "QMML-BurningMen'sSoul",
-          "kaggle_rank": 2558,
+          "kaggle_rank": 2571,
           "score": 0.95762,
           "last_submission": "2026-10-22",
-          "rank_change": -93,
+          "rank_change": -106,
           "history": [
             [
               "2026-10-22",
@@ -686,17 +686,17 @@
             [
               "2026-10-25",
               0.95762,
-              2558
+              2571
             ]
           ]
         },
         {
           "member": "Leo",
           "team": "qmml-leo",
-          "kaggle_rank": 2559,
+          "kaggle_rank": 2572,
           "score": 0.95762,
           "last_submission": "2026-10-15",
-          "rank_change": -93,
+          "rank_change": -106,
           "history": [
             [
               "2026-10-15",
@@ -751,17 +751,17 @@
             [
               "2026-10-25",
               0.95762,
-              2559
+              2572
             ]
           ]
         },
         {
           "member": "Random",
           "team": "QMML-random",
-          "kaggle_rank": 2560,
+          "kaggle_rank": 2573,
           "score": 0.95762,
           "last_submission": "2026-10-22",
-          "rank_change": -93,
+          "rank_change": -106,
           "history": [
             [
               "2026-10-22",
@@ -781,7 +781,7 @@
             [
               "2026-10-25",
               0.95762,
-              2560
+              2573
             ]
           ]
         }
