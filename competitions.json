@@ -5,5 +5,12 @@
     "metric": "ROC AUC",
     "higher_is_better": true,
     "deadline": "2026-10-31T23:59:00Z"
+  },
+  {
+    "slug": "playground-series-s6e11",
+    "title": "Predicting Credit Card Fraud",
+    "metric": "ROC AUC",
+    "higher_is_better": true,
+    "deadline": "2026-11-30T23:59:00Z"
   }
 ]
