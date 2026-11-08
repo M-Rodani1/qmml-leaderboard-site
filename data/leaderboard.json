@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-11-08T02:39:21Z",
+  "updated_at": "2026-11-08T09:30:06Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -1262,15 +1262,15 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-11-30T23:59:00Z",
-      "total_teams": 1051,
+      "total_teams": 1073,
       "entries": [
         {
           "member": "Mohamed rodani",
           "team": "Qmml-Mohamed rodani",
-          "kaggle_rank": 565,
+          "kaggle_rank": 580,
           "score": 0.94786,
           "last_submission": "2026-11-07",
-          "rank_change": -2,
+          "rank_change": -17,
           "history": [
             [
               "2026-11-05",
@@ -1290,7 +1290,7 @@
             [
               "2026-11-08",
               0.94786,
-              565
+              580
             ]
           ]
         }
