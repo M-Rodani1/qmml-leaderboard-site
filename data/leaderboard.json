@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-11-09T00:02:41Z",
+  "updated_at": "2026-11-09T01:07:34Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -1267,10 +1267,10 @@
         {
           "member": "Mohamed rodani",
           "team": "Qmml-Mohamed rodani",
-          "kaggle_rank": 453,
-          "score": 0.95084,
-          "last_submission": "2026-11-08",
-          "rank_change": 156,
+          "kaggle_rank": 221,
+          "score": 0.95212,
+          "last_submission": "2026-11-09",
+          "rank_change": 388,
           "history": [
             [
               "2026-11-05",
@@ -1294,8 +1294,8 @@
             ],
             [
               "2026-11-09",
-              0.95084,
-              453
+              0.95212,
+              221
             ]
           ]
         }
