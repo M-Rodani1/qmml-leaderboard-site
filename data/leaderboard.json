@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "updated_at": "2026-11-20T23:01:18Z",
+  "updated_at": "2026-11-21T03:58:12Z",
   "competitions": [
     {
       "slug": "playground-series-s6e10",
@@ -1262,15 +1262,15 @@
       "metric": "ROC AUC",
       "higher_is_better": true,
       "deadline": "2026-11-30T23:59:00Z",
-      "total_teams": 2499,
+      "total_teams": 2516,
       "entries": [
         {
           "member": "MoRo",
           "team": "Qmml-MoRo",
-          "kaggle_rank": 538,
+          "kaggle_rank": 544,
           "score": 0.95275,
           "last_submission": "2026-11-17",
-          "rank_change": -36,
+          "rank_change": -6,
           "history": [
             [
               "2026-11-15",
@@ -1301,16 +1301,21 @@
               "2026-11-20",
               0.95275,
               538
+            ],
+            [
+              "2026-11-21",
+              0.95275,
+              544
             ]
           ]
         },
         {
           "member": "Tempname",
           "team": "QMML-tempname",
-          "kaggle_rank": 1668,
+          "kaggle_rank": 1677,
           "score": 0.94704,
           "last_submission": "2026-11-12",
-          "rank_change": -102,
+          "rank_change": -9,
           "history": [
             [
               "2026-11-12",
@@ -1356,16 +1361,21 @@
               "2026-11-20",
               0.94704,
               1668
+            ],
+            [
+              "2026-11-21",
+              0.94704,
+              1677
             ]
           ]
         },
         {
           "member": "B",
           "team": "QMML-b",
-          "kaggle_rank": 1990,
+          "kaggle_rank": 2003,
           "score": 0.94603,
           "last_submission": "2026-11-12",
-          "rank_change": -117,
+          "rank_change": -13,
           "history": [
             [
               "2026-11-12",
@@ -1411,16 +1421,21 @@
               "2026-11-20",
               0.94603,
               1990
+            ],
+            [
+              "2026-11-21",
+              0.94603,
+              2003
             ]
           ]
         },
         {
           "member": "WOY",
           "team": "QMML - WOY",
-          "kaggle_rank": 1991,
+          "kaggle_rank": 2004,
           "score": 0.94603,
           "last_submission": "2026-11-12",
-          "rank_change": -117,
+          "rank_change": -13,
           "history": [
             [
               "2026-11-12",
@@ -1466,16 +1481,21 @@
               "2026-11-20",
               0.94603,
               1991
+            ],
+            [
+              "2026-11-21",
+              0.94603,
+              2004
             ]
           ]
         },
         {
           "member": "Bayes",
           "team": "QMML-Bayes",
-          "kaggle_rank": 2490,
+          "kaggle_rank": 2507,
           "score": 0.5,
           "last_submission": "2026-11-12",
-          "rank_change": -134,
+          "rank_change": -17,
           "history": [
             [
               "2026-11-12",
@@ -1521,13 +1541,18 @@
               "2026-11-20",
               0.5,
               2490
+            ],
+            [
+              "2026-11-21",
+              0.5,
+              2507
             ]
           ]
         }
       ],
       "status": "open",
       "leaderboard": "public",
-      "movement_since": "2026-11-19"
+      "movement_since": "2026-11-20"
     }
   ]
 }
